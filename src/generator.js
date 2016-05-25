@@ -268,6 +268,10 @@ var Generator = (function () {
 
                 if (property.type === 'integer' || property.type === 'double')
                     property.typescriptType = 'number';
+                else if (property.type === 'array') 
+                    property.typescriptType = 'any[]';
+                else if (property.type === 'object')
+                    property.typescriptType = 'any';
                 else
                     property.typescriptType = property.type;
 

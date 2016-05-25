@@ -1,6 +1,6 @@
 /* tslint:disable */
-import { Injectable } from 'angular2/core';
-import { Http, Response, Headers } from 'angular2/http';
+import { Injectable } from '@angular/core';
+import { Http, Response, Headers } from '@angular/http';
 import { {{#definitions}}{{name}}{{^last}}, {{/last}}{{/definitions}} } from './models';
 import 'rxjs/Rx';
 
@@ -49,7 +49,7 @@ export class ApiClientService {
 	{{/parameters}}
 	* 
 	*/
-	public {{&methodName}}({{#parameters}}{{&camelCaseName}}: {{typescriptType}}{{^last}}, {{/last}}{{/parameters}}) {
+	public {{&methodName}}({{#parameters}}{{&camelCaseName}}{{#typescriptType}}: {{typescriptType}}{{/typescriptType}}{{^last}}, {{/last}}{{/parameters}}) {
 		let payload = {};	
 		let queryParameters = {};
 		let headers = new Headers();
@@ -70,8 +70,8 @@ export class ApiClientService {
 		});
           {{/isPatternType}}
 			    {{^isPatternType}}
-		if(parameters['{{&camelCaseName}}'] !== undefined){
-			queryParameters['{{&name}}'] = parameters['{{&camelCaseName}}'];
+		if({{&camelCaseName}} !== undefined){
+			queryParameters['{{&name}}'] = {{&camelCaseName}};
 		}
           {{/isPatternType}}
         {{/isSingleton}}
@@ -82,8 +82,8 @@ export class ApiClientService {
 		headers.append('{{&name}}', '{{&singleton}}');
         {{/isSingleton}}
         {{^isSingleton}}
-		if(parameters['{{&camelCaseName}}'] !== undefined){
-			headers.append('{{&name}}', parameters['{{&camelCaseName}}']);
+		if({{&camelCaseName}} !== undefined){
+			headers.append('{{&name}}', {{&camelCaseName}});
 		}
         {{/isSingleton}}
 			{{/isHeaderParameter}}
@@ -92,11 +92,11 @@ export class ApiClientService {
 			{{/isBodyParameter}}
 			{{#isFormParameter}}
 			  {{#isSingleton}}
-		form['{{&name}}'] = '{{&singleton}}';
+		queryParameters['{{&name}}'] = '{{&singleton}}';
         {{/isSingleton}}
         {{^isSingleton}}
-		if(parameters['{{&camelCaseName}}'] !== undefined){
-			form['{{&name}}'] = parameters['{{&camelCaseName}}'];
+		if({{&camelCaseName}} !== undefined){
+			queryParameters['{{&name}}'] = {{&camelCaseName}};
 		}
 			  {{/isSingleton}}
 			{{/isFormParameter}}
@@ -104,7 +104,7 @@ export class ApiClientService {
 		let uri = `{{&backTickPath}}`;
 	  
 		return this.http
-			.{{angular2httpMethod}}(this.domain + uri{{#hasPayload}}, JSON.stringify({{#parameters}}{{#isBodyParameter}}{{&camelCaseName}}{{/isBodyParameter}}{{/parameters}}){{/hasPayload}}, { headers: headers, params: queryParameters })
+			.{{angular2httpMethod}}(this.domain + uri{{#hasPayload}}, JSON.stringify({{#parameters}}{{#isBodyParameter}}{{&camelCaseName}}{{/isBodyParameter}}{{/parameters}}){{/hasPayload}}, { headers: headers, search: JSON.stringify(queryParameters) })
 			.map((res: Response) => {
         return res;
       });
