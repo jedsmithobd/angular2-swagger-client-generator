@@ -104,7 +104,7 @@ export class ApiClientService {
 		let uri = `{{&backTickPath}}`;
 	  
 		return this.http
-			.{{angular2httpMethod}}(this.domain + uri{{#hasPayload}}, JSON.stringify({{#parameters}}{{#isBodyParameter}}{{&camelCaseName}}{{/isBodyParameter}}{{/parameters}}){{/hasPayload}}, { headers: headers, search: JSON.stringify(queryParameters) })
+			.{{angular2httpMethod}}(this.domain + uri{{#hasPayload}}, {{#BodyParameter}}JSON.stringify({{&BodyParameter.camelCaseName}}){{/BodyParameter}}{{^BodyParameter}}''{{/BodyParameter}}{{/hasPayload}}, { headers: headers, search: JSON.stringify(queryParameters) })
 			.map((res: Response) => {
         return res;
       });

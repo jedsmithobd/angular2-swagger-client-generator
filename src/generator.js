@@ -213,9 +213,10 @@ var Generator = (function () {
                         parameter.singleton = parameter.enum[0];
                     }
 
-                    if (parameter.in === 'body')
+                    if (parameter.in === 'body') {
                         parameter.isBodyParameter = true;
-
+                        method.bodyParameter = parameter;
+                    }
                     else if (parameter.in === 'path')
                         parameter.isPathParameter = true;
 
