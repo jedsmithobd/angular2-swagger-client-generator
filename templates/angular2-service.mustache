@@ -1,16 +1,16 @@
-/* tslint:disable */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import { Http, Response, Headers, URLSearchParams } from '@angular/http';
 import { {{#definitions}}{{name}}{{^last}}, {{/last}}{{/definitions}} } from './models';
 import 'rxjs/Rx';
 
+export { {{#definitions}}{{name}}{{^last}}, {{/last}}{{/definitions}} };
 
 @Injectable()
 /**
  * Created with angular2-swagger-client-generator v{{&version}}
  */
 export class ApiClientService {
-	domain:string;
+  domain:string;
   
   constructor(public http: Http){
     {{#domain}}
@@ -20,6 +20,17 @@ export class ApiClientService {
     this.domain = '';
     {{/domain}}
   }
+  
+  private urlParamifyObject (paramObject: any): URLSearchParams {
+    let params: URLSearchParams = new URLSearchParams();
+    for (var param in paramObject) {
+      if(paramObject.hasOwnProperty(param) && paramObject[param]) {
+        params.set(param, paramObject[param]);
+      }
+    }
+    
+    return params;
+  } 
   /*
 	constructor(public http: Http, options?: any) {
 		var domain = (typeof options === 'object') ? options.domain : options;
@@ -104,7 +115,11 @@ export class ApiClientService {
 		let uri = `{{&backTickPath}}`;
 	  
 		return this.http
-			.{{angular2httpMethod}}(this.domain + uri{{#hasPayload}}, {{#BodyParameter}}JSON.stringify({{&BodyParameter.camelCaseName}}){{/BodyParameter}}{{^BodyParameter}}''{{/BodyParameter}}{{/hasPayload}}, { headers: headers, search: JSON.stringify(queryParameters) })
+			.{{angular2httpMethod}}(this.domain + uri{{#hasPayload}}, {{#bodyParameter}}JSON.stringify(payload['{{&bodyParameter.camelCaseName}}']){{/bodyParameter}}{{^bodyParameter}}''{{/bodyParameter}}{{/hasPayload}}, 
+            { 
+                headers: headers, 
+                search: this.urlParamifyObject(queryParameters) 
+            })
 			.map((res: Response) => {
         return res;
       });
